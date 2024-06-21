@@ -1,0 +1,13 @@
+# This pipeline uses derfinder to scan the genome for expressed regions and checks overlaps with known features, if any. 
+# It requires data from various databases in BED/GTF and FASTA format. 
+# tRNAs are gathered from gtRNAdb
+# piRNAs from piRNAdb v1.7.6
+# miRs from miRbase version Dec 2022
+# sno from snoDB (USherbrooke) - these had nonunique sequences even with unique IDs. Version from Feb 2023.
+# 
+
+nohup bedtools sort -i mask_regions.bed > mask_regions.sort.bed &
+
+nohup bedtools maskfasta -fi hg38.fa -bed /mnt/acri7/DER_PIPELINE/annotations/mask_regions.sort.bed -fo ./DERFINDER_ref/hg38_masked.fa &
+
+cat hg38_masked.fa /mnt/acri7/DER_PIPELINE/annotations/tRNA.2.fa /mnt/acri7/DER_PIPELINE/annotations/human_miR.1.fa /mnt/acri7/DER_PIPELINE/piRNAdb.hsa.v1_7_6.fa > custom_genome.fa
